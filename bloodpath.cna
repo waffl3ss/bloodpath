@@ -1,0 +1,34 @@
+# James Pletcher, 2019
+# Option for "ALL" domains coming soon
+
+popup credentials {
+	item "Mark Owned" {
+		dialog_show(create_dialog($1));
+	}
+}
+
+sub create_dialog {
+	$credential = $1;
+	$owned_dialog = dialog("Mark Owned", %(), lambda({callback($credential, $2, $3)}));
+	dialog_description($owned_dialog, "Mark user(s) as owned in BloodHound.");
+
+	$proc = exec("./owned_utils.py -r domains");
+	$d_line = readln($proc);
+	@domains = split(",", $d_line);
+	closef($proc);
+	drow_combobox($owned_dialog, "domain", "Domain:", @domains);
+
+	dbutton_action($owned_dialog, "Go");
+	return $owned_dialog;
+}
+
+sub callback {
+	foreach $id ($1) {
+		$username = $id["user"];
+		$username = matches($username, "([^ ]*)")[0];
+                $username = $username . "@" . $3["domain"];
+		println($username);
+
+	exec(@("./owned_utils.py", "-r", "owned", "-t", "User", "-l", $username));
+	}
+}
