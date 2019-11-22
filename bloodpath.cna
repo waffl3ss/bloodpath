@@ -12,7 +12,7 @@ sub create_dialog {
 	$owned_dialog = dialog("Mark Owned", %(), lambda({callback($credential, $2, $3)}));
 	dialog_description($owned_dialog, "Mark user(s) as owned in BloodHound.");
 
-	$proc = exec("./owned_utils.py -r domains");
+	$proc = exec("./owned.py -r domains");
 	$d_line = readln($proc);
 	@domains = split(",", $d_line);
 	closef($proc);
@@ -29,6 +29,6 @@ sub callback {
                 $username = $username . "@" . $3["domain"];
 		println($username);
 
-	exec(@("./owned_utils.py", "-r", "owned", "-t", "User", "-l", $username));
+	exec(@("./owned.py", "-r", "owned", "-t", "User", "-l", $username));
 	}
 }
