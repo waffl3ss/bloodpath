@@ -8,4 +8,4 @@ Cobalt Strike's Script Console will output the username node that it is marking 
 
 Modify the 'dbusername' and 'dbpassword' variables in the owned.py script to apply to your neo4j bloodhound credentials.
 
-If using a team bloodhound server, modifying the 'url' variable in the owned.py script to point to the server.
+If using a team bloodhound server, modify the 'url' variable in the owned.py script to point to the server.
