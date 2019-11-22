@@ -1,11 +1,14 @@
 #!/usr/bin/python3
-
-# James Pletcher
-# Will be updated in a future release (coming soon)
-
+# James Pletcher, 2019
 
 import requests, json
 import getopt, sys
+import base64
+
+dbusername = 'neo4j'
+dbpassword = 'BloodHound'
+preauth = dbusername + ':' + dbpassword
+auth = str(base64.b64encode(preauth.encode('utf-8')), 'utf-8')
 
 def main(argv):
 	node_type = ''
@@ -37,22 +40,14 @@ def mux(request, node_type, node_label):
 		get_domains();
 	elif request == 'owned':
 		mark_owned(node_type, node_label)
-	elif request == 'create':
-		create(node_type, node_label)
-	elif request == 'exists':
-		exists(node_type, node_label)
-	elif request == 'exists_like':
-		exists_starts_with(node_type, node_label)
 	else:
 		print("Error: unknown request type")
 
 def mark_owned(nodetype, nodelabel):
-	#statement = 'START n = node(*) WHERE lower(n.name) = "' + nodelabel.lower() + '" SET n.owned = TRUE RETURN n'
 	statement = 'MATCH (n) WHERE toLower(n.name) CONTAINS "' + nodelabel.lower() + '" SET n.owned=True RETURN n'
-	# MATCH (n) WHERE toLower(n.name) CONTAINS "srvzenosspr" AND toLower(n.name) CONTAINS "" RETURN n
 	headers = { "Accept": "application/json; charset=UTF-8",
 		"Content-Type": "application/json",
-		"Authorization": "bmVvNGo6Qmxvb2RIb3VuZA==" }
+		"Authorization": auth }
 	data = {"statements": [{'statement': statement}]}
 	url = 'http://localhost:7474/db/data/transaction/commit'
 	r = requests.post(url=url,headers=headers,json=data)
@@ -62,7 +57,7 @@ def get_domains():
 	statement = "MATCH (n:Domain) RETURN n"
 	headers = { "Accept": "application/json; charset=UTF-8",
 		"Content-Type": "application/json",
-		"Authorization": "bmVvNGo6Qmxvb2RIb3VuZA==" }
+		"Authorization": auth }
 	data = {"statements": [{'statement': statement}]}
 	url = 'http://localhost:7474/db/data/transaction/commit'
 	r = requests.post(url=url,headers=headers,json=data)
