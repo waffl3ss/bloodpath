@@ -15,7 +15,6 @@ url = 'http://localhost:7474/db/data/transaction/commit'
 headers = { "Accept": "application/json; charset=UTF-8",
 		"Content-Type": "application/json",
 		"Authorization": auth }
-data = {"statements": [{'statement': statement}]}
 
 def main(argv):
 	node_type = ''
@@ -52,11 +51,13 @@ def mux(request, node_type, node_label):
 
 def mark_owned(nodetype, nodelabel):
 	statement = 'MATCH (n) WHERE toLower(n.name) CONTAINS "' + nodelabel.lower() + '" SET n.owned=True RETURN n'
+	data = {"statements": [{'statement': statement}]}
 	r = requests.post(url=url,headers=headers,json=data)
 	print(r.text)
 
 def get_domains():
 	statement = "MATCH (n:Domain) RETURN n"
+	data = {"statements": [{'statement': statement}]}
 	r = requests.post(url=url,headers=headers,json=data)
 	j = json.loads(r.text)
 	output = ''
