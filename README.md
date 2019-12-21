@@ -2,7 +2,7 @@
 
 Aggressor script for Cobalt Strike to mark users as owned in BloodHound from the Cobalt Strike credentials tab. Speeds up the process.
 
-'bloodpath.cna' calls for 'owned.py' from the working directory, so place both files in the root folder of your Cobalt Strike installation. (i.e. /opt/cobaltstrike/)
+'bloodpath.cna' calls for 'owned.py' from the working directory, so place both files in the root folder of your Cobalt Strike installation. (i.e. /opt/cobaltstrike/) make the 'owned.py' script executable (important!)
 
 Cobalt Strike's Script Console will output the username node that it is marking in BloodHound.
 
